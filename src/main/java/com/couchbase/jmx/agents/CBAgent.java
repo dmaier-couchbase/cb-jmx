@@ -25,7 +25,7 @@ public class CBAgent {
     
     //Logger
     private static final Logger LOG = Logger.getLogger(CBAgent.class.getName());
-    private static final String NAME = "CBAgent";
+    private static final String NAME = "Couchbase";
     private static final String URL = "service:jmx:rmi:///jndi/rmi://localhost:9999/server";
     
     //The MBean server
