@@ -1,6 +1,6 @@
 package com.couchbase.jmx.main;
 
-import agents.CBAgent;
+import com.couchbase.jmx.agents.CBAgent;
 import java.io.IOException;
 import java.util.logging.Logger;
 
@@ -23,11 +23,50 @@ public class Main {
      */
     public static void main(String[] args) {
         
-        LOG.info("Starting CBAgent ...");
-        CBAgent agent = new CBAgent();
-        waitForEnterPressed();    
+        //Validate params
+        if (validateArgs(args))
+        {
+            LOG.info("Starting CBAgent ...");
+            CBAgent agent = new CBAgent();
+            waitForEnterPressed();    
+        }
+        else
+        {
+            usage();
+        }    
     }
     
+    /**
+     * Validate the arguments
+     * 
+     * @param args 
+     */
+    private static boolean validateArgs(String[] args)
+    {
+        if (args == null) return false;
+        if (args.length == 0) return false;
+        
+        try
+        {
+            Long.parseLong(args[1]);
+        }
+        catch (NumberFormatException ex)
+        {
+            return false;
+        }
+        
+        //By default return true;
+        return true;
+    }
+
+    /**
+     * Print usage information
+     */
+    private static void usage()
+    {
+        System.out.println("Use: java -jar cb-jmx.jar ${host} ${port} ${user} ${password}\n" +
+                           "Please make sure that you executed 'rmiregistry 9999 &' before!");
+    }
     
     /**
      * Wait until a key is pressed

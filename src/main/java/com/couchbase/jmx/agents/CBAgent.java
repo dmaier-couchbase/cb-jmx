@@ -1,4 +1,4 @@
-package agents;
+package com.couchbase.jmx.agents;
 
 import com.couchbase.jmx.mbeans.Info;
 import java.io.IOException;
