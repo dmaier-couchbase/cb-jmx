@@ -13,7 +13,7 @@ rmiregistry 9999 &
 
 * Execute the JAR file
 ```
-java -cp cb-jmx-1.0-SNAPSHOT.jar com.couchbe.jmx.main.Main 192.168.7.130 8091 couchbase couchbase test
+java -jar cb-jmx-1.0-SNAPSHOT-jar-with-dependencies.jar 192.168.7.160 8091 couchbase couchbase test
 ```
 
 * Connect via JConsole to it
