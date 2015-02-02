@@ -21,3 +21,7 @@ java -cp cb-jmx-1.0-SNAPSHOT.jar com.couchbe.jmx.main.Main 192.168.7.130 8091 co
 jconsole service:jmx:rmi:///jndi/rmi://localhost:9999/server
 ```
 
+The MBeans section of JConsole now shows you a 'Couchbase' subsection. So far only 2 Beans are implemented
+* Info: Shows general information about the JMX service
+* GetCMD: Show the information how many get commands are currently processed (min, max, avg, samples)
+
