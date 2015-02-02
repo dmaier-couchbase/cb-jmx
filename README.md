@@ -19,5 +19,5 @@ java -cp cb-jmx-1.0-SNAPSHOT.jar com.couchbe.jmx.main.Main 192.168.7.130 8091 co
 * Connect via JConsole to it
 ```
 jconsole service:jmx:rmi:///jndi/rmi://localhost:9999/server
-``
+```
 
