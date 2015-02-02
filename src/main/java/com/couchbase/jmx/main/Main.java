@@ -1,6 +1,7 @@
 package com.couchbase.jmx.main;
 
 import com.couchbase.jmx.agents.CBAgent;
+import com.couchbase.jmx.httpclient.RESTClientFactory;
 import java.io.IOException;
 import java.util.logging.Logger;
 
@@ -18,6 +19,9 @@ public class Main {
      * The RMI registry needs to be started first: rmiregistry 9999 & 
      * The property -Dcom.sun.management.jmxremote should be used
      * 
+     * You then can connect via:
+     *    jconsole service:jmx:rmi:///jndi/rmi://localhost:9999/server
+     * 
      * 
      * @param args 
      */
@@ -26,7 +30,19 @@ public class Main {
         //Validate params
         if (validateArgs(args))
         {
+            LOG.info("Connecting to Couchbase REST service ...");
+            
+            String host = args[0];
+            int port = Integer.parseInt(args[1]);
+            String user = args[2];
+            String password = args[3];
+            String bucket = args[4];
+            
+            RESTClientFactory.createClient(host, port, user, password, bucket);
+            
+       
             LOG.info("Starting CBAgent ...");
+       
             CBAgent agent = new CBAgent();
             waitForEnterPressed();    
         }
@@ -45,10 +61,11 @@ public class Main {
     {
         if (args == null) return false;
         if (args.length == 0) return false;
+        if (args.length != 5) return false;
         
         try
         {
-            Long.parseLong(args[1]);
+            Integer.parseInt(args[1]);
         }
         catch (NumberFormatException ex)
         {
@@ -64,7 +81,7 @@ public class Main {
      */
     private static void usage()
     {
-        System.out.println("Use: java -jar cb-jmx.jar ${host} ${port} ${user} ${password}\n" +
+        System.out.println("Use: java -jar cb-jmx.jar ${host} ${port} ${user} ${password} ${bucket}\n" +
                            "Please make sure that you executed 'rmiregistry 9999 &' before!");
     }
     

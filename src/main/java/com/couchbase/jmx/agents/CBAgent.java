@@ -1,5 +1,6 @@
 package com.couchbase.jmx.agents;
 
+import com.couchbase.jmx.mbeans.GetCmd;
 import com.couchbase.jmx.mbeans.Info;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
@@ -43,8 +44,8 @@ public class CBAgent {
 
             //Register the beans
             LOG.info("Registering MBeans ...");
-            ObjectName infoBeanName = createUniqueName("info");
-            mbs.registerMBean(new Info(), infoBeanName);
+            mbs.registerMBean(new Info(), createUniqueName(Info.NAME));
+            mbs.registerMBean(new GetCmd(), createUniqueName(GetCmd.NAME));
             
             //Start the RMI connector
             LOG.info("Starting RMI connector ...");

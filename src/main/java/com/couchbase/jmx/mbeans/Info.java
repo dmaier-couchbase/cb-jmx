@@ -7,6 +7,7 @@ package com.couchbase.jmx.mbeans;
  */
 public class Info implements InfoMBean {
 
+    public static final String NAME = "info";
             
     /**
      * The info message
