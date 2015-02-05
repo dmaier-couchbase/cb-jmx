@@ -25,3 +25,5 @@ The MBeans section of JConsole now shows you a 'Couchbase' subsection. So far on
 * Info: Shows general information about the JMX service
 * GetCMD: Show the information how many get commands are currently processed (min, max, avg, samples)
 
+# Screenshots
+![alt tag](https://raw.github.com/dmaier-couchbase/cb-jmx/master/assets/screen.png)
