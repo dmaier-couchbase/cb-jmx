@@ -21,14 +21,11 @@ public class GetCmdTest {
     
         RESTClientFactory.createClient("192.168.7.160", 8091, "couchbase", "couchbase", "test");
         
-        GetCmd cmd = new GetCmd();
+        CmdGet cmd = new CmdGet();
         
-        Double[] samples = cmd.getSamples();
+        String samples = cmd.getSamples();
         
-        for (Double val : samples) {
-            
-            System.out.println(val);
-        }
+        System.out.println(samples);
     
     }
 }

@@ -1,7 +1,17 @@
 package com.couchbase.jmx.agents;
 
-import com.couchbase.jmx.mbeans.GetCmd;
+import com.couchbase.jmx.mbeans.BaseSampled;
+import com.couchbase.jmx.mbeans.CmdGet;
+import com.couchbase.jmx.mbeans.CmdSet;
+import com.couchbase.jmx.mbeans.CpuUtilizationRate;
+import com.couchbase.jmx.mbeans.DeleteHits;
+import com.couchbase.jmx.mbeans.EpBgFetched;
+import com.couchbase.jmx.mbeans.EpDiskqueueItems;
+import com.couchbase.jmx.mbeans.EpMemHighWat;
+import com.couchbase.jmx.mbeans.EpMemLowWat;
 import com.couchbase.jmx.mbeans.Info;
+import com.couchbase.jmx.mbeans.MemUsed;
+import com.couchbase.jmx.mbeans.VbReplicaQueueSize;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.util.logging.Level;
@@ -44,8 +54,23 @@ public class CBAgent {
 
             //Register the beans
             LOG.info("Registering MBeans ...");
+            
             mbs.registerMBean(new Info(), createUniqueName(Info.NAME));
-            mbs.registerMBean(new GetCmd(), createUniqueName(GetCmd.NAME));
+ 
+            BaseSampled[] metrics = 
+                    new BaseSampled[]
+                    { 
+                      new CmdGet(), new CmdSet(), new CpuUtilizationRate(),
+                      new DeleteHits(), new EpBgFetched(), new EpDiskqueueItems(),
+                      new EpMemLowWat(), new EpMemHighWat(), new MemUsed(),
+                      new VbReplicaQueueSize()
+                    };
+            
+            for (BaseSampled m : metrics) {
+            
+                 mbs.registerMBean(m, createUniqueName(m.getName()));
+                
+            }
             
             //Start the RMI connector
             LOG.info("Starting RMI connector ...");

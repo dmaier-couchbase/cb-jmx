@@ -1,6 +1,8 @@
 package com.couchbase.jmx.httpclient;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthScope;
@@ -24,6 +26,8 @@ import org.json.simple.JSONValue;
  * @author David Maier <david.maier at couchbase.com>
  */
 public class RESTClient {
+    
+    private static final Logger LOG = Logger.getLogger(RESTClient.class.getName());
     
     /**
      * Couchbase host
@@ -107,6 +111,8 @@ public class RESTClient {
     
     public JSONObject get(String relUrl) throws IOException
     {
+        LOG.log(Level.INFO, "Requested: {0}", relUrl);
+        
         HttpGet getReq = new HttpGet(relUrl);
         
         HttpResponse resp = this.httpClient.execute(this.httpHost, getReq, this.httpCtx);
