@@ -2,8 +2,6 @@
 
 The idea of the service is to expose the Couchbase statistics via JMX. So tools like E.G. 'jconsole' can connect in order to access the metrics.
 
-The current state is quite experimental.
-
 To start it:
 
 * Run the RMI registry
