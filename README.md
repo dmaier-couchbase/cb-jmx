@@ -128,7 +128,7 @@ public class CmdGet extends BaseSampled implements CmdGetMBean {
 
 # Metric Approximation
 
-The service runs a job which gathers all the bucket level metrics every second. Every metric is returned as a series of samples. The standard accuracy is 1 minute, which means that you get a series of 60 values per metric, which means that on side of Couchbase happened one measurement per second. The MBeans are now approximating this series of values in order to provide a flat value. This flat value can then be plotted (see screen shot below).
+The service runs a job which gathers all the bucket level metrics every 5 seconds. Every metric is returned as a series of samples. The standard accuracy is 1 minute, which means that you get a series of 60 values per metric. This means that there is one measurement per second on side of Couchbase server. The MBeans are now approximating this series of values in order to provide a flat value. This flat value can then be plotted (see screen shot below).
 
 * Min: The minimum value of the series
 * Max: The maximum value of the series
