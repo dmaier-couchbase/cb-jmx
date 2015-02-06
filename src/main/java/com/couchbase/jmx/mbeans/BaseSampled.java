@@ -1,9 +1,8 @@
 package com.couchbase.jmx.mbeans;
 
 import com.couchbase.jmx.helper.SampleStats;
-import com.couchbase.jmx.httpclient.RESTClient;
 import com.couchbase.jmx.httpclient.RESTClientFactory;
-import java.io.IOException;
+import com.couchbase.jmx.job.LocalCache;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -22,11 +21,10 @@ public class BaseSampled {
      * Logger 
      */
     private static final Logger LOG = Logger.getLogger(BaseSampled.class.getName());
-    
+        
     /**
-     * Default error message
+     * The interval when the clock should be reseted
      */
-    private static final String ERR = "Could not access the samples!";
     private static final long INTERVAL = 59;
     
     /**
@@ -40,32 +38,32 @@ public class BaseSampled {
     protected Double[] samples;
     
     /**
-     * A clock
+     * The url to access for the statistics
      */
-    protected int curr;
-    
-    
-    /**
-     * The REST client
-     */
-    protected static RESTClient client; 
-    
+    protected String url;
      
     /**
+     * A clock counter
+     */
+    protected int curr;
+         
+    /**
      * The default constructor
+     * @param name
      */
     public BaseSampled(String name) {
     
         this.name = name;
         this.curr = 0;
         
-        try {
-            
-            client = RESTClientFactory.getClient();
-       
-        } catch (Exception ex) {
         
-             LOG.log(Level.SEVERE,ERR, ex.getMessage());
+        try {
+        
+            this.url = "/pools/default/buckets/" + RESTClientFactory.getClient().getBucket() + "/stats";
+        
+        } catch (Exception ex) {
+            
+            LOG.log(Level.SEVERE, "Could not access the target bucket name: {0}", ex.getMessage());
         }
     }
     
@@ -76,27 +74,20 @@ public class BaseSampled {
      * @return
      */
     protected Double[] retSamples() {
+        
         List<Double> result = new ArrayList<>();
 
-        try {
+        JSONObject json = LocalCache.get(url);
 
-            JSONObject json = client.get("/pools/default/buckets/" + client.getBucket() + "/stats");
+        JSONObject op = (JSONObject) json.get("op");
+        JSONObject sampl = (JSONObject) op.get("samples");
+        JSONArray cmd = (JSONArray) sampl.get(this.getName());
 
-            JSONObject op = (JSONObject) json.get("op");
-            JSONObject sampl = (JSONObject) op.get("samples");
-            JSONArray cmd = (JSONArray) sampl.get(this.getName());
+        for (Object c : cmd) {
 
-            for (Object c : cmd) {
+            double val = Double.parseDouble(c.toString());
 
-                double val = Double.parseDouble(c.toString());
-
-                result.add(val);
-            }
-
-        } catch (IOException ex) {
-
-            LOG.log(Level.SEVERE, ERR, ex.getMessage());
-
+            result.add(val);
         }
 
         this.samples = result.toArray(new Double[result.size()]);
@@ -111,7 +102,8 @@ public class BaseSampled {
      * @return 
      */
     protected double retMin() {
-        
+      
+      retSamples();
       return SampleStats.min(this.samples);
         
     }
@@ -123,6 +115,7 @@ public class BaseSampled {
      */
     protected double retMax() {
 
+        retSamples();
         return SampleStats.max(this.samples);
     }
 
@@ -135,27 +128,36 @@ public class BaseSampled {
      */
     protected double retAvg() {
              
+        retSamples();
         return SampleStats.avg(this.samples);
         
     }
 
     /**
-     * Get the median value from the samples
+     * Get the median value from the samples, the median is the value in the middle
+     * of the samples
+     * 
      * @return 
      */
     protected double retMedian() {
         
+        retSamples();
         return SampleStats.median(this.samples);
     }
     
+    
+    /**
+     * Loops over the samples
+     * 
+     * @return 
+     */
     protected double retNext() {
+        
+        retSamples();
         
         if (curr >= INTERVAL) {
 
             curr = 0;
-            
-            retSamples();
-
         }
         else
         {

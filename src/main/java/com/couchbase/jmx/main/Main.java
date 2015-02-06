@@ -2,6 +2,8 @@ package com.couchbase.jmx.main;
 
 import com.couchbase.jmx.agents.CBAgent;
 import com.couchbase.jmx.httpclient.RESTClientFactory;
+import com.couchbase.jmx.job.JobRunner;
+import com.couchbase.jmx.job.StatsUpdateJob;
 import java.io.IOException;
 import java.util.logging.Logger;
 
@@ -30,6 +32,7 @@ public class Main {
         //Validate params
         if (validateArgs(args))
         {
+            //Preparing the connection to Couchbase
             LOG.info("Connecting to Couchbase REST service ...");
             
             String host = args[0];
@@ -39,11 +42,20 @@ public class Main {
             String bucket = args[4];
             
             RESTClientFactory.createClient(host, port, user, password, bucket);
-            
        
-            LOG.info("Starting CBAgent ...");
-       
+            //Start the JMX agent
+            LOG.info("Starting CBAgent ...");   
             CBAgent agent = new CBAgent();
+            
+            //Only execute the job if the agent was started
+            if (agent.isRunning())
+            {
+            
+                LOG.info("Starting statistics update job");
+                JobRunner.run(new StatsUpdateJob());
+            
+            }
+            
             waitForEnterPressed();    
         }
         else

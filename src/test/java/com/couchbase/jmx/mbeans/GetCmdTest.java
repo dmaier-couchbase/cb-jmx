@@ -7,8 +7,9 @@
 package com.couchbase.jmx.mbeans;
 
 import com.couchbase.jmx.httpclient.RESTClientFactory;
+import com.couchbase.jmx.job.JobRunner;
+import com.couchbase.jmx.job.StatsUpdateJob;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -17,9 +18,13 @@ import static org.junit.Assert.*;
 public class GetCmdTest {
     
     @Test
-    public void testGetCmd() {
+    public void testGetCmd() throws InterruptedException {
     
         RESTClientFactory.createClient("192.168.7.160", 8091, "couchbase", "couchbase", "test");
+    
+        JobRunner.run(new StatsUpdateJob());
+        
+        Thread.sleep(1000);
         
         CmdGet cmd = new CmdGet();
         

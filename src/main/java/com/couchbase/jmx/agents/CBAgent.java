@@ -40,7 +40,10 @@ public class CBAgent {
     
     //The MBean server
     private MBeanServer mbs = null;
-     
+    
+    
+    //The status of the agent, true means that the agent was started
+    private boolean running = true;
      
     /**
      * The constructor of the agent
@@ -81,6 +84,7 @@ public class CBAgent {
         } catch (IOException | InstanceAlreadyExistsException | MBeanRegistrationException | MalformedObjectNameException | NotCompliantMBeanException ex) {
            
             LOG.log(Level.SEVERE, "Could not bind beans: {0}", ex.getMessage());
+            this.running = false;
         }
         
     }
@@ -99,6 +103,10 @@ public class CBAgent {
         return new ObjectName(name);
         
     }
-    
+
+    public boolean isRunning() {
+        return this.running;
+    }
+       
     
 }
