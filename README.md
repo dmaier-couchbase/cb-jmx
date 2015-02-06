@@ -30,4 +30,5 @@ The MBeans section of JConsole now shows you a 'Couchbase' subsection. So far on
 TODO
 
 # Screenshots
+![alt tag](https://raw.github.com/dmaier-couchbase/cb-jmx/master/assets/screen.png)
 
